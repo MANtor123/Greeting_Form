@@ -1,0 +1,22 @@
+{
+  "name": "greeting_webapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MANtor123/Greeting_Form.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MANtor123/Greeting_Form/issues"
+  },
+  "homepage": "https://github.com/MANtor123/Greeting_Form#readme",
+  "dependencies": {
+    "express": "^4.15.3"
+  }
+}
