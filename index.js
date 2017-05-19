@@ -1,16 +1,19 @@
 var express = require('express');
 var app = express();
+var port = 3000;
 
-app.get('/greetings',function(req, res){
-res.send('Hello,')
+app.get('/greetings/:name',function(req, res){
+var name = req.params.name
+res.send('Hello,' + name)
 })
 
+app.get('/counter')
 
-var server = app.listen(3000, function(){
+app.listen(port,function(){
 
-var host = server.address().address;
-var port = server.address().port;
+// var host = server.address().address;
+// var port = server.address().port;
 
-console.log('Example app listening at http://%s:%s', host, port);
+console.log('Example app listening at :' + port);
 
 });
