@@ -16,7 +16,7 @@ app.get('/greeted', function(req, res) {
     res.send(list);
 });
 
-app.get('/counter/:name', function(){
+app.get('/counter/:name', function(req, res){
 var name = req.params.name;
 var greetingCounter = 0;
 for(var i = 0; i<list.length; i++){
@@ -24,7 +24,7 @@ for(var i = 0; i<list.length; i++){
     greetingCounter++;
   }
 }
-res.send("has been greeted" + greetingCounter++ )
+res.send(name + " " + "has been greeted " + greetingCounter++ + " " +'times')
 })
 
 app.listen(port,function(){
