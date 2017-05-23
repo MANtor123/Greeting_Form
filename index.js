@@ -16,6 +16,17 @@ app.get('/greeted', function(req, res) {
     res.send(list);
 });
 
+app.get('/counter/:name', function(){
+var name = req.params.name;
+var greetingCounter = 0;
+for(var i = 0; i<list.length; i++){
+  if(list[i].name = name){
+    greetingCounter++;
+  }
+}
+res.send("has been greeted" + greetingCounter++ )
+})
+
 app.listen(port,function(){
 
 // var host = server.address().address;
