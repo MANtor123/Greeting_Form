@@ -1,13 +1,24 @@
 var express = require('express');
+var exphbs  = require('express-handlebars');
+var bodyParser = require('body-parser')
+
 var app = express();
-// var greetedNames = require('./name.js');
-// var GreetedNames = greetedNames();
+
 var port = 3000;
+
+
+app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+app.set('view engine', 'handlebars');
+
+app.get('/', function (req, res) {
+    res.render('index');
+});
+
 
 var list = [];
 var uniqList =[]
 
-app.get('/greetings/:name',function(req, res){
+app.get('./greetings/:name',function(req, res){
 var name = req.params.name
 if(uniqList.indexOf(name) === -1){
   uniqList.push(name)
@@ -16,11 +27,11 @@ res.send('Hello,' + name);
   list.push(name);
 });
 
-app.get('/greeted', function(req, res) {
+app.get('./greeted', function(req, res) {
     res.send(uniqList);
 });
 
-app.get('/counter/:name', function(req, res){
+app.get('./counter/:name', function(req, res){
 var name = req.params.name;
 // console.log(name);
 var greetingCounter = 0;
