@@ -1,0 +1,17 @@
+<div class='style'>
+<h1>Greeting WebApp</h1>
+<form class ="entry" action='/greetings' method='post'>
+
+<input type='text' name='firstName' placeholder="enter name"> </input><br><br>
+<input type='radio' name='language' value='English'>English </input>
+<input type='radio' name='language' value='IsiXhosa'>IsiXhosa </input>
+<input type='radio' name='language' value='Sotho'>Sotho </input><br><br>
+
+<input type='submit' class='button' value='GREET'></input>
+</form>
+
+<a href="counter">view greeted people</a>
+
+<div id="output">{{greeting}} </div>
+<div> {{greetCount}} </div>
+</div>

@@ -1,0 +1,16 @@
+body{
+  text-align: center;
+  background-color: azure;
+}
+
+#output{
+
+}
+
+.style{
+  border-style: solid;
+  border-width: medium;
+  width: 654px;
+  margin-left: 20em;
+  margin-top: 160px;
+}
