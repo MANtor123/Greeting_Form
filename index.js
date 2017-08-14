@@ -82,8 +82,6 @@ app.get('/counter', function(req, res){
 res.send(list)
 })
 
-
-
 app.listen(process.env.PORT || 3000, function() {
 
   // var host = server.address().address;
