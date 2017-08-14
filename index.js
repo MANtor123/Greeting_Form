@@ -45,15 +45,14 @@ app.post('/greetings', function(req, res) {
     string = 'Molo' + " " + name
     greetingCounter++
     //
-    }
-   else if (language === 'Sotho') {
+  } else if (language === 'Sotho') {
     // res.render('index', {
     string = 'Dumela' + " " + name
     greetingCounter++
   }
 
   res.render('index', {
-    greeting : string,
+    greeting: string,
     greetCount: greetingCounter
   })
 });
@@ -62,24 +61,24 @@ app.post('/greetings', function(req, res) {
 //     res.send(uniqList);
 // });
 
-app.get('/counter', function(req, res){
-  var name = req.body.firstName
+app.get('/counter', function(req, res) {
+  var name = req.body.firstName;
   // if(uniqList.indexOf(name) === -1){
   //   uniqList.push(name)
   // }
   //list.push(name)
-// var name = req.params.name;
-// // console.log(name);
-// if(namesGreeted[name] === undefined){
-//   greetingCounter++;
-//   namesGreeted[name] = name;
-// }
-// // for(var i = 0; i<list.length; i++){
-// //   if(list[i].name = name){
-// //     greetingCounter++;
-// //   }
-// // }
-res.send(list)
+  // var name = req.params.name;
+  // // console.log(name);
+  // if(namesGreeted[name] === undefined){
+  //   greetingCounter++;
+  //   namesGreeted[name] = name;
+  // }
+  // // for(var i = 0; i<list.length; i++){
+  // //   if(list[i].name = name){
+  // //     greetingCounter++;
+  // //   }
+  // // }
+  res.send(list)
 });
 
 app.listen(process.env.PORT || 3000, function() {
