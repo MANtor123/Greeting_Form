@@ -3,6 +3,14 @@ var exphbs = require('express-handlebars');
 var bodyParser = require('body-parser');
 var app = express();
 
+var mongoose = require('mongoose')
+
+var db = mongoose.connection;
+
+const mongoURL = process.env.MONGO_DB_URL || "mongodb://localhost/test";
+
+mongoose.connect(mongoURL, {useMongoClient: true});
+
 var port = 3000;
 
 var list = [];
