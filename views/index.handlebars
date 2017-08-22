@@ -1,3 +1,6 @@
+<div class='Style'>
+  <a href="counter" class='link'>view greeted people</a>
+</div>
 <div class='style'>
 <h1>Greeting WebApp</h1>
 <form class ="entry" action='/greetings' method='post'>
@@ -10,8 +13,10 @@
 <input type='submit' class='button' value='GREET'></input>
 </form>
 
-<a href="counter">view greeted people</a>
-
 <div id="output">{{greeting}} </div>
+<div class='font'>
+{{messages.error}}
+</div>
 <div> {{greetCount}} </div>
+<input type='reset' class='btn' value='RESET'></input>
 </div>

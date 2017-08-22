@@ -2,16 +2,25 @@ var express = require('express');
 var exphbs = require('express-handlebars');
 var bodyParser = require('body-parser');
 var app = express();
+var flash = require('express-flash');
+var session = require('express-session')
+//var Schema = mongoose.Schema
 
-var mongoose = require('mongoose')
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/greet');
 
-var db = mongoose.connection;
+var Name = mongoose.model('Name', { name: String });
 
-const mongoURL = process.env.MONGO_DB_URL || "mongodb://localhost/test";
 
-mongoose.connect(mongoURL, {useMongoClient: true});
+
+
+
 
 var port = 3000;
+
+app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 * 30 }}))
+app.use(flash())
+
 
 var list = [];
 var uniqList = [];
@@ -58,6 +67,18 @@ app.post('/greetings', function(req, res) {
     string = 'Dumela' + " " + name
     greetingCounter++
   }
+else{
+  req.flash('error', 'Please enter the name and select a language')
+}
+
+  var name = new Name({ name: name });
+  name.save(function (err) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log('Greet');
+    }
+  });
 
   res.render('index', {
     greeting: string,
@@ -65,7 +86,7 @@ app.post('/greetings', function(req, res) {
   })
 });
 //
-// app.get('./greeted', function(req, res) {
+// 0000000000000000000000000000000000000000000000000000app.get('./greeted', function(req, res) {
 //     res.send(uniqList);
 // });
 
