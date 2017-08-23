@@ -7,7 +7,7 @@ var session = require('express-session')
 //var Schema = mongoose.Schema
 
 var mongoose = require('mongoose');
-//mongoose.connect('mongodb://localhost/greet');
+mongoose.connect('mongodb://localhost/greet');
 
 
 const mongoURL = process.env.MONGO_DB_URL || "mongodb://localhost/greet";
