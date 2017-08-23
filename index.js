@@ -20,12 +20,6 @@ mongoose.connect(mongoURL);
 var Name = mongoose.model('Name', { name: String });
 
 
-
-
-
-
-var port = 3000;
-
 app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 * 30 }}))
 app.use(flash())
 
@@ -118,11 +112,8 @@ app.get('/counter', function(req, res) {
   res.send(list)
 });
 
-app.listen(process.env.PORT || 3000, function() {
+var port = process.env.PORT || 3000;
 
-  // var host = server.address().address;
-  // var port = server.address().port;
-
+app.listen(port, function() {
   console.log('Example app listening at :' + port);
-
 });
