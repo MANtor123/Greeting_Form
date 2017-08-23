@@ -10,6 +10,7 @@ var session = require('express-session')
 var mongoose = require('mongoose');
 //mongoose.connect('mongodb://localhost/greet');
 
+var port = process.env.PORT || 3000;
 
 const mongoURL = process.env.MONGO_DB_URL || "mongodb://localhost/greet";
 
@@ -112,7 +113,6 @@ app.get('/counter', function(req, res) {
   res.send(list)
 });
 
-var port = process.env.PORT || 3000;
 
 app.listen(port, function() {
   console.log('Example app listening at :' + port);
