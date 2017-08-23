@@ -1,22 +1,20 @@
-//
+'use strict';
+
 var express = require('express');
 var exphbs = require('express-handlebars');
 var bodyParser = require('body-parser');
-var app = express();
 var flash = require('express-flash');
 var session = require('express-session')
+var mongoose = require('mongoose');
 //var Schema = mongoose.Schema
 
-var mongoose = require('mongoose');
-//mongoose.connect('mongodb://localhost/greet');
+const port = process.env.PORT || 3000;
 
-var port = process.env.PORT || 3000;
+var app = express();
 
 const mongoURL = process.env.MONGO_DB_URL || "mongodb://localhost/greet";
 
 mongoose.connect(mongoURL);
-
-
 
 var Name = mongoose.model('Name', { name: String });
 
