@@ -6,18 +6,40 @@ var bodyParser = require('body-parser');
 var flash = require('express-flash');
 var session = require('express-session')
 var mongoose = require('mongoose');
-//var Schema = mongoose.Schema
+var Schema = mongoose.Schema
 
 var app = express();
 
 const mongoURL = process.env.MONGO_DB_URL || "mongodb://localhost/greet";
 
-mongoose.connect(mongoURL);
+//connection
+mongoose.connect(mongoURL, function(err) {
+  if (err) {
+    console.log('Error Connecting to DB: ' + err);
+  } else {
+    console.log('connection to DB is successful');
+  }
+});
 
-var Name = mongoose.model('Name', { name: String });
+//Schema
+var nameSchema = new Schema({
+  name: {
+    type: String
+  }
+});
 
+//nameSchema.index({name: 1}, {unique: true});
 
-app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 * 30 }}))
+//Model
+var Name = mongoose.model('Name', nameSchema);
+
+app.use(session({
+  secret: 'keyboard cat',
+  cookie: {
+    maxAge: 60000 * 30
+  }
+}))
+
 app.use(flash())
 
 
@@ -44,73 +66,108 @@ app.get('/', function(req, res) {
 
 
 app.post('/greetings', function(req, res) {
-  var string = ' ';
-  var name = req.body.firstName
-  var language = req.body.language
+      var string = ' ';
+      var firstName = req.body.firstName
+      var language = req.body.language
 
-  list.push(name);
+      list.push(firstName);
 
-  if (language === 'English') {
-    // res.render('index', {
-    string = 'Hello' + " " + name
-    greetingCounter++
-    //   greetCount: "has been greeted " + greetingCounter++ + " " + 'times'
-    // })
-  } else if (language === 'IsiXhosa') {
-    // res.render('index', {
-    string = 'Molo' + " " + name
-    greetingCounter++
-    //
-  } else if (language === 'Sotho') {
-    // res.render('index', {
-    string = 'Dumela' + " " + name
-    greetingCounter++
+      if (language === 'English') {
+        // res.render('index', {
+        string = 'Hello' + " " + firstName
+        greetingCounter++
+        //   greetCount: "has been greeted " + greetingCounter++ + " " + 'times'
+        // })
+      } else if (language === 'IsiXhosa') {
+        // res.render('index', {
+        string = 'Molo' + " " + firstName
+        greetingCounter++
+        //
+      } else if (language === 'Sotho') {
+        // res.render('index', {
+        string = 'Dumela' + " " + firstName
+        greetingCounter++
+      } else if (!language || !firstName) {
+        req.flash('error', 'Please enter the name and select a language');
+      };
+
+// var alreadyGreeted = function (greetedName, cb){
+//   if(namesGreeted[greetedName] === undefined){
+//     list.push(firstName);
+//   }
+//   Name.create(newNames, function(err, results) {
+//     if (err) {
+//       cb (null){
+//         return err
+//       }
+//     } else {
+//       //  console.log(results);
+//       console.log("successfuly added" + results);
+//     }
+// }
+//
+
+var newNames = {
+  name: firstName
+};
+
+Name.findOne({
+  name: firstName
+}, function(err, results) {
+  if (err) {
+    return done(err);
+    console.log(err);
   }
-else{
-  req.flash('error', 'Please enter the name and select a language')
-}
 
-  var name = new Name({ name: name });
-  name.save(function (err) {
+else {
+  Name.create(newNames, function(err, results) {
     if (err) {
       console.log(err);
     } else {
-      console.log('Greet');
+      //  console.log(results);
+      console.log("successfuly added" + results);
     }
   });
+}
 
-  res.render('index', {
-    greeting: string,
-    greetCount: greetingCounter
-  })
-});
-//
-// 0000000000000000000000000000000000000000000000000000app.get('./greeted', function(req, res) {
-//     res.send(uniqList);
-// });
-
-app.get('/counter', function(req, res) {
-  var name = req.body.firstName;
-  // if(uniqList.indexOf(name) === -1){
-  //   uniqList.push(name)
-  // }
-  //list.push(name)
-  // var name = req.params.name;
-  // // console.log(name);
-  // if(namesGreeted[name] === undefined){
-  //   greetingCounter++;
-  //   namesGreeted[name] = name;
-  // }
-  // // for(var i = 0; i<list.length; i++){
-  // //   if(list[i].name = name){
-  // //     greetingCounter++;
-  // //   }
-  // // }
-  res.send(list)
 });
 
-const port = process.env.PORT || 3000;
 
-app.listen(port, function() {
-  console.log('Example app listening at :' + port);
-});
+          res.render('index', {
+            greeting: string,
+            greetCount: greetingCounter
+          })
+
+
+      });
+    //});
+      //
+      // 0000000000000000000000000000000000000000000000000000app.get('./greeted', function(req, res) {
+      //     res.send(uniqList);
+      // });
+
+      app.get('/counter', function(req, res) {
+      //   var name = req.body.firstName;
+      //   // if(uniqList.indexOf(name) === -1){
+      //   //   uniqList.push(name)
+      //   // }
+      //   //list.push(name)
+      //   // var name = req.params.name;
+      //   // // console.log(name);
+      //   // if(namesGreeted[name] === undefined){
+      //   //   greetingCounter++;
+      //   //   namesGreeted[name] = name;
+      //   // }
+      //   // // for(var i = 0; i<list.length; i++){
+      //   // //   if(list[i].name = name){
+      //   // //     greetingCounter++;
+      //   // //   }
+      //   // // }
+      res.send(list)
+      });
+
+      const port = process.env.PORT || 3000;
+
+      app.listen(port, function() {
+        console.log('Example app listening at :' + port)
+      });
