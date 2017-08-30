@@ -87,7 +87,7 @@ app.post('/greetings', function(req, res) {
         // res.render('index', {
         string = 'Dumela' + " " + firstName
         greetingCounter++
-      } else if (!language || !firstName) {
+      } else if (firstName === "") {
         req.flash('error', 'Please enter the name and select a language');
       };
 
@@ -106,6 +106,7 @@ app.post('/greetings', function(req, res) {
 //     }
 // }
 //
+
 
 var newNames = {
   name: firstName
@@ -146,7 +147,7 @@ else {
       //     res.send(uniqList);
       // });
 
-      app.get('/counter', function(req, res) {
+      app.get('/greeted', function(req, res) {
       //   var name = req.body.firstName;
       //   // if(uniqList.indexOf(name) === -1){
       //   //   uniqList.push(name)
@@ -163,7 +164,40 @@ else {
       //   // //     greetingCounter++;
       //   // //   }
       //   // // }
-      res.send(list)
+      var firstName = req.body.firstName
+      var newNames = {
+        name: firstName
+      };
+
+      Name.find({}, function(err, results) {
+        if (err) {
+          return done(err);
+          console.log(err);
+        }
+
+      else {
+        Name.create(newNames, function(err, results) {
+          if (err) {
+            console.log(err);
+          } else {
+            //  console.log(results);
+            console.log("successfuly added" + results);
+          }
+        });
+      }
+
+      });
+
+      Name.find({}, function(err, listName){
+
+        res.render('ListNames',{
+          listName : listName
+
+      })
+      });
+
+
+      //res.send(list)
       });
 
       const port = process.env.PORT || 3000;
