@@ -3,7 +3,7 @@ body{
   background-color: azure;
 }
 
-#output{
+.output{
 
 }
 
@@ -27,4 +27,14 @@ font-size: 20px
 
 .font{
   font: red
+}
+
+.block{
+  width: 654px;
+  margin-left: 20em;
+  margin-top: 75px;
+}
+
+.inline{
+  margin-left: -1062px
 }

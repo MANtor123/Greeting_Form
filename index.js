@@ -24,11 +24,12 @@ mongoose.connect(mongoURL, function(err) {
 //Schema
 var nameSchema = new Schema({
   name: {
-    type: String
+    type: String,
+    countTimes : Number
   }
 });
+//nameSchema.index({seq: 1}, {unique: true});
 
-//nameSchema.index({name: 1}, {unique: true});
 
 //Model
 var Name = mongoose.model('Name', nameSchema);
@@ -52,6 +53,7 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
+
 app.engine('handlebars', exphbs({
   defaultLayout: 'main'
 }));
@@ -59,13 +61,12 @@ app.set('view engine', 'handlebars');
 app.use(express.static('public'))
 
 app.get('/', function(req, res) {
-  // var namesGreeted = req.body.firstName;
-  // console.log(namesGreeted);
+
   res.render('index')
 });
 
 
-app.post('/greetings', function(req, res) {
+app.post('/greetings', function(req, res, next) {
       var string = ' ';
       var firstName = req.body.firstName
       var language = req.body.language
@@ -91,43 +92,38 @@ app.post('/greetings', function(req, res) {
         req.flash('error', 'Please enter the name and select a language');
       };
 
-// var alreadyGreeted = function (greetedName, cb){
-//   if(namesGreeted[greetedName] === undefined){
-//     list.push(firstName);
-//   }
-//   Name.create(newNames, function(err, results) {
-//     if (err) {
-//       cb (null){
-//         return err
-//       }
-//     } else {
-//       //  console.log(results);
-//       console.log("successfuly added" + results);
-//     }
-// }
-//
-
 
 var newNames = {
-  name: firstName
+  name: firstName,
+  countTimes : 1
+
+  //greetingCounter++
 };
 
 Name.findOne({
   name: firstName
 }, function(err, results) {
   if (err) {
-    return done(err);
+    return next(err);
+    newNames.save(results)
     console.log(err);
+    //greetingCounter++
   }
 
 else {
-  Name.create(newNames, function(err, results) {
+  Name.create(newNames,  function(err, results) {
     if (err) {
       console.log(err);
-    } else {
+      //greetingCounter++
+    } else if(results) {
       //  console.log(results);
+      results.countTimes = results.countTimes + 1
+      //Name.save()
       console.log("successfuly added" + results);
+      //greetingCounter++
     }
+
+
   });
 }
 
@@ -141,29 +137,10 @@ else {
 
 
       });
-    //});
-      //
-      // 0000000000000000000000000000000000000000000000000000app.get('./greeted', function(req, res) {
-      //     res.send(uniqList);
-      // });
 
-      app.get('/greeted', function(req, res) {
-      //   var name = req.body.firstName;
-      //   // if(uniqList.indexOf(name) === -1){
-      //   //   uniqList.push(name)
-      //   // }
-      //   //list.push(name)
-      //   // var name = req.params.name;
-      //   // // console.log(name);
-      //   // if(namesGreeted[name] === undefined){
-      //   //   greetingCounter++;
-      //   //   namesGreeted[name] = name;
-      //   // }
-      //   // // for(var i = 0; i<list.length; i++){
-      //   // //   if(list[i].name = name){
-      //   // //     greetingCounter++;
-      //   // //   }
-      //   // // }
+
+      app.get('/greeted', function(req, res, next) {
+
       var firstName = req.body.firstName
       var newNames = {
         name: firstName
@@ -171,7 +148,8 @@ else {
 
       Name.find({}, function(err, results) {
         if (err) {
-          return done(err);
+
+          return next(err);
           console.log(err);
         }
 
@@ -180,10 +158,13 @@ else {
           if (err) {
             console.log(err);
           } else {
+            results.greetingCounter = results.greetingCounter + 1
+            Name.save()
             //  console.log(results);
             console.log("successfuly added" + results);
           }
         });
+
       }
 
       });
@@ -196,12 +177,19 @@ else {
       })
       });
 
-
-      //res.send(list)
       });
 
-      const port = process.env.PORT || 3000;
+        app.get('/timesGreeted', function(req, res) {
 
+
+
+          });
+
+      const port = process.env.PORT || 8000;
+
+      app.use(function (err, req, res, next) {
+      res.status(500).send(err.stack);
+      })
       app.listen(port, function() {
         console.log('Example app listening at :' + port)
       });
