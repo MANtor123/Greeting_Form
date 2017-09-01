@@ -3,8 +3,8 @@ body{
   background-color: azure;
 }
 
-.output{
-
+.message{
+font-size: 2em
 }
 
 .style{

@@ -6,7 +6,7 @@ var bodyParser = require('body-parser');
 var flash = require('express-flash');
 var session = require('express-session')
 var mongoose = require('mongoose');
-var Schema = mongoose.Schema
+// var Schema = mongoose.Schema
 
 var app = express();
 
@@ -22,17 +22,20 @@ mongoose.connect(mongoURL, function(err) {
 });
 
 //Schema
-var nameSchema = new Schema({
-  name: {
-    type: String,
-    countTimes : Number
-  }
-});
+// var nameSchema = new Schema({
+//   name: {
+//     type: String,
+//     countTimes : Number
+//   }
+// });
 //nameSchema.index({seq: 1}, {unique: true});
 
 
 //Model
-var Name = mongoose.model('Name', nameSchema);
+var Name = mongoose.model('Name', {
+  name: String,
+  countTimes: Number
+});
 
 app.use(session({
   secret: 'keyboard cat',
@@ -67,129 +70,151 @@ app.get('/', function(req, res) {
 
 
 app.post('/greetings', function(req, res, next) {
-      var string = ' ';
-      var firstName = req.body.firstName
-      var language = req.body.language
+  var string = ' ';
+  var firstName = req.body.firstName
+  var language = req.body.language
 
-      list.push(firstName);
+  list.push(firstName);
 
-      if (language === 'English') {
-        // res.render('index', {
-        string = 'Hello' + " " + firstName
-        greetingCounter++
-        //   greetCount: "has been greeted " + greetingCounter++ + " " + 'times'
-        // })
-      } else if (language === 'IsiXhosa') {
-        // res.render('index', {
-        string = 'Molo' + " " + firstName
-        greetingCounter++
-        //
-      } else if (language === 'Sotho') {
-        // res.render('index', {
-        string = 'Dumela' + " " + firstName
-        greetingCounter++
-      } else if (firstName === "") {
-        req.flash('error', 'Please enter the name and select a language');
-      };
+  if (language === 'English') {
+    // res.render('index', {
+    string = 'Hello' + " " + firstName
+    greetingCounter++
+    //   greetCount: "has been greeted " + greetingCounter++ + " " + 'times'
+    // })
+  } else if (language === 'IsiXhosa') {
+    // res.render('index', {
+    string = 'Molo' + " " + firstName
+    greetingCounter++
+    //
+  } else if (language === 'Sotho') {
+    // res.render('index', {
+    string = 'Dumela' + " " + firstName
+    greetingCounter++
+  } else if (firstName === "") {
+    req.flash('error', 'Please enter the name and select a language');
+  };
 
 
-var newNames = {
-  name: firstName,
-  countTimes : 1
+  var newNames = {
+    name: firstName,
+    countTimes: 1
 
-  //greetingCounter++
-};
+  };
 
-Name.findOne({
-  name: firstName
-}, function(err, results) {
-  if (err) {
-    return next(err);
-    newNames.save(results)
-    console.log(err);
-    //greetingCounter++
-  }
+  Name.findOne({
+    name: firstName
+  }, function(err, results) {
+    if (!results) {
+      Name.create(newNames);
+    } else {
 
-else {
-  Name.create(newNames,  function(err, results) {
-    if (err) {
-      console.log(err);
-      //greetingCounter++
-    } else if(results) {
-      //  console.log(results);
-      results.countTimes = results.countTimes + 1
-      //Name.save()
-      console.log("successfuly added" + results);
-      //greetingCounter++
-    }
-
+      results.countTimes = results.countTimes + 1;
+      results.save();
+    };
 
   });
-}
+
+
+  res.render('index', {
+    greeting: string,
+    greetCount: greetingCounter
+  })
+
 
 });
 
 
-          res.render('index', {
-            greeting: string,
-            greetCount: greetingCounter
-          })
+app.get('/greeted', function(req, res, next) {
+
+  // var firstName = req.body.firstName
+  // var newNames = {
+  //   name: firstName
+  // };
+
+  // Name.find({}, function(err, results) {
+  //   if (err) {
+  //
+  //     var newNames = new Name ({name : name, countTimes : 1})
+  //     newNames.save(results)
+  //     return next(err);
+  //     console.log(err);
+  //   }
+  //
+  // else {
+  //   Name.create(newNames, function(err, results) {
+  //     if (err) {
+  //       console.log(err);
+  //     } else {
+  //       results.countTimes += 1;
+  //
+  //       //Name.save(results)
+  //       //  console.log(results);
+  //       console.log("successfuly added" + results);
+  //     }
+  //   });
+  //
+  // }
+
+  // });
 
 
-      });
+  // Name.count({}, function(err, countTimes){
+  //   if(err){
+  //     return next(err)
+  //   }
+
+  // else{
+
+  Name.find({}, function(err, listName) {
+
+    res.render('ListNames', {
+      listName: listName
+
+    })
+  });
+  // }
+})
 
 
-      app.get('/greeted', function(req, res, next) {
+// });
 
-      var firstName = req.body.firstName
-      var newNames = {
-        name: firstName
-      };
 
-      Name.find({}, function(err, results) {
-        if (err) {
-
-          return next(err);
-          console.log(err);
-        }
-
-      else {
-        Name.create(newNames, function(err, results) {
-          if (err) {
-            console.log(err);
-          } else {
-            results.greetingCounter = results.greetingCounter + 1
-            Name.save()
-            //  console.log(results);
-            console.log("successfuly added" + results);
-          }
-        });
-
-      }
-
-      });
-
-      Name.find({}, function(err, listName){
-
-        res.render('ListNames',{
-          listName : listName
-
+app.get('/greeted/:firstName', function(req, res, next) {
+  var firstName = req.params.firstName
+  Name.findOne({
+    name: firstName
+  }, function(err, results) {
+    if (err) {
+      return next()
+      console.log(err);
+    } else {
+      res.render('ListNames', {
+        timesBeen: firstName + 'has been greeted' + results.countTimes + 'times',
+        grtname: results.name + ' ' + 'has been greeted' + ' ' +results.countTimes + ' times!!!'
       })
-      });
-
-      });
-
-        app.get('/timesGreeted', function(req, res) {
+    }
+  })
+})
 
 
+app.post('/reset', function(req, res) {
+  Name.remove({}, function(err, remove) {
+if (err) {
+  console.log(err);
+}
+else {
 
-          });
+  res.render('index')
+}
 
-      const port = process.env.PORT || 8000;
+  })
+});
+const port = process.env.PORT || 8000;
 
-      app.use(function (err, req, res, next) {
-      res.status(500).send(err.stack);
-      })
-      app.listen(port, function() {
-        console.log('Example app listening at :' + port)
-      });
+app.use(function(err, req, res, next) {
+  res.status(500).send(err.stack);
+})
+app.listen(port, function() {
+  console.log('Example app listening at :' + port)
+});
