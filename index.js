@@ -127,46 +127,10 @@ app.post('/greetings', function(req, res, next) {
 
 app.get('/greeted', function(req, res, next) {
 
-  // var firstName = req.body.firstName
-  // var newNames = {
-  //   name: firstName
-  // };
 
-  // Name.find({}, function(err, results) {
-  //   if (err) {
-  //
-  //     var newNames = new Name ({name : name, countTimes : 1})
-  //     newNames.save(results)
-  //     return next(err);
-  //     console.log(err);
-  //   }
-  //
-  // else {
-  //   Name.create(newNames, function(err, results) {
-  //     if (err) {
-  //       console.log(err);
-  //     } else {
-  //       results.countTimes += 1;
-  //
-  //       //Name.save(results)
-  //       //  console.log(results);
-  //       console.log("successfuly added" + results);
-  //     }
-  //   });
-  //
-  // }
-
-  // });
-
-
-  // Name.count({}, function(err, countTimes){
-  //   if(err){
-  //     return next(err)
-  //   }
-
-  // else{
 
   Name.find({}, function(err, listName) {
+    console.log(listName);
 
     res.render('ListNames', {
       listName: listName
